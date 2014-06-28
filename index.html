@@ -26,9 +26,333 @@
                     </h1>
                     <p>Collection of some usefull PHP Programms</p>
                 </div>
+                <div class="advertisement">
+                    <div id="carbonads-container">
+                        <div class="carbonad">
+                            <a class="ui orange button" href="http://www.github.com/daljeet-singh">@daljeet-singh</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="main container">
+
+            <h2 class="ui dividing header">createId()</h2>
+            <div class="example">
+                <div class="ui grid">
+                    <div class="ten wide column">
+                        <div class="ui small piled feed segment">
+                            <h4 class="ui header">Code</h4>
+                            <div class="ui inverted segment">
+<pre>
+<code>
+&lt;?php
+    function createId( $intOnly = true ) {
+        $fixed = 1390000000;
+        $t = explode( " ", microtime() );
+        $uid = $t[1] - $fixed;
+        return ( $intOnly ) ? $uid : uniqid();
+    }
+?&gt;
+</code>
+</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="six wide column">
+                        <div class="column">
+                            <div class="ui raised segment">
+                                <div class="ui teal ribbon label">Description</div>
+                                <p>This function will return random and unique id in integer.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui horizontal icon divider">
+                <i class="circular heart icon outline"></i>
+            </div>
+
+            <h2 class="ui dividing header">getQuarter()</h2>
+            <div class="example">
+                <div class="ui grid">
+                    <div class="ten wide column">
+                        <div class="ui small piled feed segment">
+                            <h4 class="ui header">Code</h4>
+                            <div class="ui inverted segment">
+<pre>
+<code>
+&lt;?php
+    function getQuarter( $d1 = '2013-01-01',
+            $d2 = '2015-01-05') {
+        if( $d1 > $d2 ) {
+            $temp = $d2;
+            $d2 = $d1;
+            $d1 = $temp;
+        }
+        $d1Q = ceil( date( "m", strtotime( $d1 ) ) / 3 );
+        $d1Y = date( "Y", strtotime( $d1 ) );
+        $d2Y = date( "Y", strtotime( $d2 ) );
+        $d2Q = ceil( date( "m", strtotime( $d2 ) ) / 3 );
+        $return = array();
+        for( $d1Y; $d1Y &lt;= $d2Y;) {
+            $return[] = $d1Y . 'Q' . $d1Q;
+            if( $d1Y == $d2Y && $d1Q == $d2Q ) {
+                return $return;
+            } else {
+                if( $d1Q == 4 ) {
+                    $d1Y++;
+                    $d1Q = 1;
+                }
+                else $d1Q++;
+            }
+        }
+    }
+?&gt;
+</code>
+</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="six wide column">
+                        <div class="column">
+                            <div class="ui raised segment">
+                                <div class="ui teal ribbon label">Description</div>
+                                <p>This function is used to return quarters between two dates</p>
+                                <p>Dates can be passed in any format, and in any order.</p>
+                                <div class="ui purple ribbon label">Demo</div>
+                                <div class="ui animated list">
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">getQuarter("2013-01-01", "2013-01-02")</div>
+                                            This will return 2013Q1
+                                         </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">getQuarter("2013-01-01", "2013-04-02")</div>
+                                            This will return 2013Q1, 2013Q2
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui horizontal icon divider">
+                <i class="circular heart icon outline"></i>
+            </div>
+
+            <h2 class="ui dividing header">quarter()</h2>
+            <div class="example">
+                <div class="ui grid">
+                    <div class="ten wide column">
+                        <div class="ui small piled feed segment">
+                            <h4 class="ui header">Code</h4>
+                            <div class="ui inverted segment">
+<pre>
+<code>
+&lt;?php
+    function quarter( $quarter = '', $calculate = 0,
+            $all = false ) {
+        $quarter = explode( 'Q', $quarter );
+        $year = $quarter[0];
+        $month = ($quarter[1]*3) -2;
+        $day = 1;
+        $calculate = $calculate*3;
+        $current = $day . '-' . $month . '-' . $year;
+        $current = date( "Y-m-d", strtotime( $current  ) );
+        $calculate = $calculate >= 0 ?  
+            '+' . $calculate . ' month' 
+            : $calculate . ' month';
+        $date = date( "Y-m-d", 
+            strtotime( $current . $calculate  ) );
+        if( $all )
+            return getQuarter( $current, $date );
+        return getQuarter( $date, $date )[0];
+    }
+?&gt;
+</code>
+</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="six wide column">
+                        <div class="column">
+                            <div class="ui raised segment">
+                                <div class="ui teal ribbon label">Description</div>
+                                <p>This function will do calculations on a quarter.</p>
+                                <p>To be used with getQuarter() function.</p>
+                                <div class="ui purple ribbon label">Demo</div>
+                                <div class="ui animated list">
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">quarter("2014Q3", '+2', true)</div>
+                                            This will find next 2 quarters and will output 2014Q4, 2015Q1
+                                         </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">quarter("2014Q3", '+2' )</div>
+                                            This will add 2 quarter's to passed quarter, will output 2015Q1
+                                         </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">quarter("2014Q2", '-2' )</div>
+                                            This will subtract 2 quarter's to passed quarter, will output 2013Q4
+                                         </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">quarter("2014Q2", '-2', true )</div>
+                                            This will find previous 2 quarters and will output 2013Q4, 2014Q1
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui horizontal icon divider">
+                <i class="circular heart icon outline"></i>
+            </div>
+
+            <h2 class="ui dividing header">quarterToDate()</h2>
+            <div class="example">
+                <div class="ui grid">
+                    <div class="ten wide column">
+                        <div class="ui small piled feed segment">
+                            <h4 class="ui header">Code</h4>
+                            <div class="ui inverted segment">
+<pre>
+<code>
+&lt;?php
+    function quarterToDate( $quarter = '' ) {
+        $quarter = explode( 'Q', $quarter );
+        $year = $quarter[0];
+        $month = ($quarter[1]*3) -2;
+        $day = 1;
+        $current = $day . '-' . $month . '-' . $year;
+        $current = date( "Y-m-d", strtotime( $current  ) );
+        return $current;
+    }
+?&gt;
+</code>
+</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="six wide column">
+                        <div class="column">
+                            <div class="ui raised segment">
+                                <div class="ui teal ribbon label">Description</div>
+                                <p>This function will return starting date for particular quarter.</p>
+                                <p>Pass quarter in format like 2014Q1 and it will output 01-01-2014</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui horizontal icon divider">
+                <i class="circular heart icon outline"></i>
+            </div>
+
+            <h2 class="ui dividing header">gettypeFromstring()</h2>
+            <div class="example">
+                <div class="ui grid">
+                    <div class="ten wide column">
+                        <div class="ui small piled feed segment">
+                            <h4 class="ui header">Code</h4>
+                            <div class="ui inverted segment">
+<pre>
+<code>
+&lt;?php
+    function gettypeFromstring( $string ){
+        return gettype( getcorrectvariable( $string ) );
+    }
+
+    function getcorrectvariable($string){
+        $string=trim( $string );
+        if( empty( $string ) ) return "";
+        if( !preg_match("/[^0-9.]+/",$string ) ) {
+            if( preg_match("/[.]+/",$string ) ) {
+                return (double)$string;
+            } else {
+                return (int)$string;
+            }
+        }
+        if( $string=="true" ) return true;
+        if( $string=="false" ) return false;
+        return (string)$string;
+    }
+?&gt;
+</code>
+</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="six wide column">
+                        <div class="column">
+                            <div class="ui raised segment">
+                                <div class="ui teal ribbon label">Description</div>
+                                <p>This function will return type of string.</p>
+                                <p>will output string, integer, double, boolean.</p>
+                                <div class="ui purple ribbon label">Output</div>
+                                <div class="ui animated list">
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">gettypeFromstring("ABCD")</div>
+                                            This will return string
+                                         </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">gettypeFromstring("ABCD123")</div>
+                                            This will return string
+                                         </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">gettypeFromstring("123")</div>
+                                            This will return integer
+                                         </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">gettypeFromstring("123 456")</div>
+                                            This will return string
+                                         </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">gettypeFromstring("12.45")</div>
+                                            This will return double
+                                         </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">gettypeFromstring("true")</div>
+                                            This will return boolean
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui horizontal icon divider">
+                <i class="circular heart icon outline"></i>
+            </div>
+
             <h2 class="ui dividing header">dump()</h2>
             <div class="example">
                 <div class="ui grid">
@@ -72,6 +396,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="ui horizontal icon divider">
+            <i class="circular heart icon outline"></i>
         </div>
     </body>
 </html>
