@@ -1,0 +1,114 @@
+function array_insert( $array, $data, $position = null ) {
+    if( $position < count( $array ) ) {
+        $result = array_slice( $array, 0, $position );
+        $result[] = $data;
+        $result = array_merge( $result, array_slice( $array, $position ) );
+    } else {
+        $result = $array;
+        $result[] = $data;
+    }
+    
+    return $result;
+}
+function array_orderby() {
+    $args = func_get_args();
+    $data = array_shift( $args );
+ 
+    if ( ! is_array( $data ) ) {
+        return array();
+    }
+    $multisort_params = array();
+    foreach ( $args as $n => $field ) {
+        if ( is_string( $field ) ) {
+            $tmp = array();
+            foreach ( $data as $row ) {
+                $tmp[] = $row[ $field ];
+            }
+            $args[ $n ] = $tmp;
+        }
+        $multisort_params[] = &$args[ $n ];
+    }
+ 
+    $multisort_params[] = &$data;
+    call_user_func_array( 'array_multisort', $multisort_params );
+    return end( $multisort_params );
+}
+function get_visitor_ip(){
+    $ip = "UNKNOWN";
+    if ( getenv( "HTTP_CLIENT_IP" ) ) {
+        $ip = getenv( "HTTP_CLIENT_IP" );
+    } elseif( getenv( "HTTP_X_FORWARDED_FOR" ) ) {
+        $ip = getenv( "HTTP_X_FORWARDED_FOR" );
+    } elseif( getenv( "REMOTE_ADDR" ) ) {
+        $ip = getenv( "REMOTE_ADDR" );
+    }
+    return $ip; 
+}
+function array_pluck(array $array, $field) {
+    $final = array();
+    foreach($array as $v) {
+        $final[] = $v[$field];
+    }
+    return $final;
+}
+function divide( $numerator, $denominator, $precision = 2 ) {
+    if( (float) $denominator == 0 || (float) $numerator == 0 ) return number_format( 0, $precision );
+    return number_format($numerator / $denominator, $precision);
+}
+function fush_id($in, $to_num = false, $pad_up = false, $pass_key = null) {
+    $out   = '';
+    $index = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $base  = strlen($index);
+    if ($to_num) {
+        $len = strlen($in) - 1;
+        for ($t = $len; $t >= 0; $t--) {
+            $bcp = bcpow($base, $len - $t);
+            $out = $out + strpos($index, substr($in, $t, 1)) * $bcp;
+        }
+        if (is_numeric($pad_up)) {
+            $pad_up--;
+            if ($pad_up > 0) {
+                $out -= pow($base, $pad_up);
+            }
+        }
+    } else {
+        if (is_numeric($pad_up)) {
+            $pad_up--;
+            if ($pad_up > 0) {
+                $in += pow($base, $pad_up);
+            }
+        }
+        for ($t = ($in != 0 ? floor(log($in, $base)) : 0); $t >= 0; $t--) {
+            $bcp = bcpow($base, $t);
+            $a   = floor($in / $bcp) % $base;
+            $out = $out . substr($index, $a, 1);
+            $in  = $in - ($a * $bcp);
+        }
+    }
+    return $out;
+}
+function toDb( $date, $addTime = false ) {
+    if( $addTime ) return date( 'Y-m-d H:i:s', strtotime( $date ) );
+    else return date( 'Y-m-d', strtotime( $date ) );
+}
+function toUI( $date ) {
+    return date( 'm/d/Y', strtotime( $date ) );
+}
+function createId( $intOnly = true ) {
+    $fixed = 1390000000;
+    $t = explode( " ", microtime() );
+    $uid = $t[1] - $fixed;
+    return ( $intOnly ) ? $uid : uniqid();
+}
+function array_multi_search($array, $key, $value) {
+    $results = array();
+    if( is_array( $array ) ) {
+        if( isset( $array[$key] ) && $array[$key] == $value ) {
+            $results[] = $array;
+        }
+        foreach ( $array as $subarray ) {
+            $results = array_merge( $results, array_multi_search( $subarray, $key, $value ) );
+        }
+    }
+    return $results;
+}
